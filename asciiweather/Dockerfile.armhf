@@ -9,10 +9,10 @@ RUN go get -u github.com/schachmat/wego
 
 WORKDIR $GOPATH/src/github.com/schachmat/wego
 
-RUN CGO_ENABLED=0 go build -o /build/wego .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=7 go build -o /build/wego .
 
 # final stage
-FROM alpine:3.8
+FROM multiarch/alpine:armhf-v3.8
 
 RUN mkdir -p /home/app
 
@@ -20,7 +20,7 @@ ENV WEGORC /home/app/.wegorc
 
 RUN apk --no-cache add curl \
     && echo "Pulling watchdog binary from Github." \
-    && curl -sSL https://github.com/openfaas/faas/releases/download/0.9.6/fwatchdog > /usr/bin/fwatchdog \
+    && curl -sSL https://github.com/openfaas/faas/releases/download/0.9.6/fwatchdog-armhf > /usr/bin/fwatchdog \
     && chmod +x /usr/bin/fwatchdog \
     && cp /usr/bin/fwatchdog /home/app \
     && apk del curl --no-cache
