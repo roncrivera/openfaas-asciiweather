@@ -28,6 +28,8 @@ RUN apk --no-cache add curl \
 # Add non root user
 RUN addgroup -S app && adduser app -S -G app
 
+COPY wego.sh /home/app/wego.sh
+
 COPY wegorc /home/app/.wegorc
 
 COPY --from=build-env /build/wego /home/app/
@@ -40,7 +42,7 @@ USER app
 
 ENV write_debug="true"
 
-ENV fprocess="xargs ./wego"
+ENV fprocess="xargs ./wego.sh"
 
 EXPOSE 8080
 
