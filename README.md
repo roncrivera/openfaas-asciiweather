@@ -20,21 +20,40 @@ $ git clone https://github.com/roncrivera/openfaas-asciiweather \
 
 Commands from this point forward will assume that you are in the `openfaas-asciiweather` directory.
 
-### Update wego config file
+### Create a Secret
 
-Open up the `wegorc` file and update with your OWM API key, e.g.
+Set the following env variable to your own OpenWeatherMap API key.
 
 ```
-$ grep YOUR_OPENWEATHERMAP_API_KEY_HERE asciiweather/wegorc
-owm-api-key=YOUR_OPENWEATHERMAP_API_KEY_HERE
+export OWMAPIKEY=<YOUR_OPENWEATHERMAP_API_KEY_HERE>
+```
+
+#### Kubernetes
+
+```
+kubectl create secret generic owm-api-key \
+  --from-literal=owm-api-key=$OWMAPIKEY \
+  --namespace openfaas-fn
+```
+
+#### Docker Swarm
+
+```
+echo $OWMAPIKEY | docker secret create secret-api-key -
 ```
 
 ## Build/Push/Deploy
 
+Set the following env variable to your OpenFaaS Gateway.
+
+```
+$ export OPENFAAS_URL=http://<YOUR_OF_GATEWAY_IP_ADDRESS>:31112
+```
+
 Build the function inside a Docker image.
 
 ```
-$ faas-cli build -f asciiweather.yml
+$ faas-cli build
 
 ```
 
@@ -43,14 +62,14 @@ Push the image to your Docker repository.
 * Remember to `docker login` first.
 
 ```
-$ faas-cli push -f asciiweather.yml
+$ faas-cli push
 ```
 
 
 Deploy function to the OpenFaas cluster.
 
 ```
-$ faas-cli deploy -f asciiweather.yml
+$ faas-cli deploy
 Deploying: asciiweather.
 
 Deployed. 202 Accepted.
