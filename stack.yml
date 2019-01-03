@@ -6,3 +6,5 @@ functions:
     lang: dockerfile
     handler: ./asciiweather
     image: riverron/asciiweather:latest
+    secrets:
+    - owm-api-key
