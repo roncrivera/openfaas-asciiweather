@@ -2,4 +2,4 @@
 
 OWMAPIKEY=$(cat /var/openfaas/secrets/owm-api-key)
 
-exec ./wego -b openweathermap -owm-api-key $OWMAPIKEY "$@"
+exec ./wego -aat-monochrome=true -b openweathermap -owm-api-key $OWMAPIKEY "$@"
